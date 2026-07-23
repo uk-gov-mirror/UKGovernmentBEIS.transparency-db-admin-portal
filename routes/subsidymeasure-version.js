@@ -17,6 +17,9 @@ router.get("/", async (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
 
     console.log("scNumber: " + req.query.scNumber);
     console.log("version: " + req.query.version);

@@ -16,6 +16,10 @@ router.get("/", (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
+    
     ssn.grantingAuthorityID_Global = req.query.gaId;
     ssn.grantingAuthorityName_Global = req.query.gaName;
     res.render("bulkupload/grantingauthority-editcancel", {

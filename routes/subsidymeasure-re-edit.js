@@ -16,6 +16,9 @@ router.post("/", (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
     
     isAddSubsidyPrimarycall = false;
     ssn.GetMonthName = "";
@@ -487,6 +490,9 @@ router.get("/", (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
     res.render("bulkupload/subsidymeasure-re-edit");
   }
 });

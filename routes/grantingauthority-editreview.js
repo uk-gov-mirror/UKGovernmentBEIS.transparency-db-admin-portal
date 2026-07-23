@@ -17,6 +17,9 @@ router.get("/", async (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
     // console.log("req.query.ga", req.query.ga.toString());
     req.query = JSON.parse(JSON.stringify(req.query));
 
@@ -68,6 +71,10 @@ router.post("/", (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
+    
     console.log("req.body", req.body);
     console.log("req.query", ssn.grantingAuthorityID_Global);
     req.query = JSON.parse(JSON.stringify(req.query));

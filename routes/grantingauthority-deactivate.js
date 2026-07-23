@@ -17,6 +17,9 @@ router.get("/", async (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
 
     // ganame = req.query.gaName;
 
@@ -47,21 +50,17 @@ router.get("/", async (req, res) => {
           } else gaListArr = [];
         }
         ssn.GaListArr_Global = gaListArr;
-        if (ssn.dashboard_roles == "BEIS Administrator") {
-          gaid = ssn.grantingAuthorityID_Global;
-          ganame = ssn.grantingAuthorityName_Global;
-          checkboxError = false;
-          res.render("bulkupload/grantingauthority-deactivate", {
-            gaid,
-            ganame,
-            checkboxError,
-            // ssn.GaListArr_Global,
-            ssn,
-            azGrpId,
-          });
-        } else {
-          res.render("bulkupload/notAuthorized");
-        }
+        gaid = ssn.grantingAuthorityID_Global;
+        ganame = ssn.grantingAuthorityName_Global;
+        checkboxError = false;
+        res.render("bulkupload/grantingauthority-deactivate", {
+          gaid,
+          ganame,
+          checkboxError,
+          // ssn.GaListArr_Global,
+          ssn,
+          azGrpId,
+        });
       } catch (err) {
         if (err.toString().includes("500"))
           res.render("bulkupload/notAvailable");

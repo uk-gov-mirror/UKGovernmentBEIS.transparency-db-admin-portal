@@ -27,6 +27,9 @@ router.get("/", (req, res) => {
     let isExcelFormat = false;
 
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator", "Granting Authority Approver", "Granting Authority Encoder"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
 
     res.render("bulkupload/bulkuploadsubsidy", {
       isFileUploadEmpty,
@@ -47,6 +50,9 @@ router.post("/", async (req, res) => {
     let isFileUploadEmpty = false;
 
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator", "Granting Authority Approver", "Granting Authority Encoder"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
 
     console.log("formvalidation");
     API_data_received = "no";

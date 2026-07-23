@@ -17,6 +17,10 @@ router.post("/", async (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_searchscheme);
+    if (!["BEIS Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
+    
     if (req.body.editReview == "true") {
       ssn.gaID_extract = req.body.grantingAuthorityID;
       var gaID_Name = {

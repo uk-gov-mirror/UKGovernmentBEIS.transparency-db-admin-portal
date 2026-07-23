@@ -16,6 +16,10 @@ router.get("/", (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
+
     console.log("totalrecords", req.query);
     // req.query = JSON.parse(JSON.stringify(req.query));
 
@@ -25,22 +29,14 @@ router.get("/", (req, res) => {
         ssn.grantingAuthorityName_Global
       );
 
-      if (ssn.dashboard_roles == "BEIS Administrator") {
-        res.render("bulkupload/grantingauthority-add", {
-          // ssn.grantingAuthorityName_Global,
-          ssn,
-        });
-      } else {
-        res.render("bulkupload/notAuthorized");
-      }
+      res.render("bulkupload/grantingauthority-add", {
+        // ssn.grantingAuthorityName_Global,
+        ssn,
+      });
     } else {
       ssn.grantingAuthorityName_Error = "";
       ssn.grantingAuthorityName_Global = "";
-      if (ssn.dashboard_roles == "BEIS Administrator") {
-        res.render("bulkupload/grantingauthority-add");
-      } else {
-        res.render("bulkupload/notAuthorized");
-      }
+      res.render("bulkupload/grantingauthority-add");
     }
   }
 });

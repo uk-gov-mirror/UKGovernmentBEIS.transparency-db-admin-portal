@@ -19,6 +19,10 @@ router.get("/", async (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_publicsearch);
+    if (!["BEIS Administrator", "Granting Authority Administrator", "Granting Authority Approver"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
+
     console.log("req.query.award: " + req.query.award);
     var awardnumber = req.query.award;
 

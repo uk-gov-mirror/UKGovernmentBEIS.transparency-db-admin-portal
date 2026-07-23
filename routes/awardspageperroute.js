@@ -18,6 +18,9 @@ router.get("/", async (req, res) => {
   } else {
     // console.log("Award_search_URL top  : " + JSON.stringify(ssn));
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator", "Granting Authority Approver", "Granting Authority Encoder"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
 
     console.log("req.query.page: " + req.query.sort);
     routing_pagenumber = req.query.sort;
@@ -172,6 +175,9 @@ router.post("/", (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator", "Granting Authority Approver", "Granting Authority Encoder"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
     res.render("bulkupload/mysubsidyawards");
   }
 });

@@ -16,7 +16,10 @@ router.post("/", (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
-    
+    if (!["BEIS Administrator", "Granting Authority Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
+
     ssn.User_Role_Single = req.body.userRole;
     ssn.User_GA_Name = req.body.GA_Selected;
     ssn.User_Name_Single = req.body.User_Name_Single;
