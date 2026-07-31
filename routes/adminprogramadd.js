@@ -17,6 +17,9 @@ router.get("/", async (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator", "Granting Authority Approver"].includes(ssn.dashboard_roles)) {
+      return res.status(403).render("bulkupload/notAuthorized");
+    }
 
     if (!req.get('Referrer').includes("review")) {
       ssn.Admin_Program_Number_Global = "";
@@ -48,6 +51,9 @@ router.get("/", async (req, res) => {
 
     req.query = JSON.parse(JSON.stringify(req.query));
     if (req.baseUrl.includes("adminprogramedit")){
+      if (!["BEIS Administrator", "Granting Authority Administrator"].includes(ssn.dashboard_roles)) {
+        return res.status(403).render("bulkupload/notAuthorized");
+      }
       if(!req.query.hasOwnProperty("id")){
         res.render("bulkupload/notAvailable");
       }else{

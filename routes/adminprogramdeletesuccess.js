@@ -22,6 +22,9 @@ router.get("/", async (req, res) => {
     var render = "admin-program/adminprogramdeletesuccess";
 
     utils.setSecurityHeaders(res, beis_url_searchscheme);
+    if (!["BEIS Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
 
     try {
       console.log("Admin Program Number", ssn.adminProgramDetails.apNumber);

@@ -24,14 +24,10 @@ router.get("/", (req, res) => {
     UserFocus = [];
     UserErrorsLenght = 0;
 
-    if (
-      ssn.dashboard_roles == "BEIS Administrator" ||
-      ssn.dashboard_roles == "Granting Authority Administrator"
-    ) {
-      res.render("bulkupload/user-add-personal");
-    } else {
-      res.render("bulkupload/notAuthorized");
+    if (!["BEIS Administrator", "Granting Authority Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
     }
+    res.render("bulkupload/user-add-personal");
   }
 });
 

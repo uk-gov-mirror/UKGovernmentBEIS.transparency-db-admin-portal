@@ -20,6 +20,9 @@ router.get("/", async (req, res) => {
   } else {
     awardnumber = req.query.award;
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator", "Granting Authority Approver"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
     try {
       const awardapidata = await axios.get(
         beis_url_accessmanagement + "/searchResults/award/" + awardnumber,

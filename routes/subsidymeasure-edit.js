@@ -19,6 +19,9 @@ router.get("/", async (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_publicsearch);
+    if (!["BEIS Administrator", "Granting Authority Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
 
     console.log("req.query.scheme: " + req.query.scheme);
     scnumber = req.query.scheme;
@@ -288,11 +291,8 @@ router.get("/", async (req, res) => {
         ssn.Maximum_Amount_Under_Scheme_255_Error = false;
         ssn.Subsidy_Of_Particular_Interest_Error = false;
 
-        if (ssn.dashboard_roles !== "Granting Authority Encoder") {
-          res.render("bulkupload/subsidymeasures-edit", { formatedCurrency });
-        } else {
-          res.render("bulkupload/notAuthorized");
-        }
+        res.render("bulkupload/subsidymeasures-edit", { formatedCurrency });
+
       } catch (err) {
         console.error(err);
         if (err.toString().includes("500"))
@@ -336,11 +336,8 @@ router.get("/", async (req, res) => {
       if (formatedCurrency.includes(","))
         Budget = formatedCurrency.split(",").join("");
       formatedCurrency = formatter.format(Budget);
-      if (ssn.dashboard_roles !== "Granting Authority Encoder") {
-        res.render("bulkupload/subsidymeasures-edit", { formatedCurrency });
-      } else {
-        res.render("bulkupload/notAuthorized");
-      }
+      res.render("bulkupload/subsidymeasures-edit", { formatedCurrency });
+
     }
   }
 });

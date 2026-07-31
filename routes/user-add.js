@@ -16,6 +16,9 @@ router.get("/", (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
 
     check_new_user = req.query.newuser;
 
@@ -44,14 +47,9 @@ router.get("/", (req, res) => {
     console.log("ssn.GA_Name_User_Global :" + ssn.GA_Name_User_Global);
     console.log("ssn.GA_Name_User_Global :" + ssn.Email_Id_Global);
 
-    if (
-      ssn.dashboard_roles == "BEIS Administrator" ||
-      ssn.dashboard_roles == "Granting Authority Administrator"
-    ) {
-      res.render("bulkupload/user-add", {
-        change: "No",
-      });
-    }
+    res.render("bulkupload/user-add", {
+      change: "No",
+    });
   }
 });
 

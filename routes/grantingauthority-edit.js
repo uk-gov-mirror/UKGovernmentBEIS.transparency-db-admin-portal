@@ -16,6 +16,9 @@ router.get("/", (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
 
     // req.query = JSON.parse(JSON.stringify(req.query));
     if (req.query.hasOwnProperty("edit")) {
@@ -27,15 +30,11 @@ router.get("/", (req, res) => {
         ssn.grantingAuthorityName_Global
       );
 
-      if (ssn.dashboard_roles == "BEIS Administrator") {
-        res.render("bulkupload/grantingauthority-edit", {
-          ssn,
-          // ssn.grantingAuthorityID_Global,
-          // ssn.grantingAuthorityName_Global,
-        });
-      } else {
-        res.render("bulkupload/notAuthorized");
-      }
+      res.render("bulkupload/grantingauthority-edit", {
+        ssn,
+        // ssn.grantingAuthorityID_Global,
+        // ssn.grantingAuthorityName_Global,
+      });
     }
   }
 });

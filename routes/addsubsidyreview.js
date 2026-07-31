@@ -18,6 +18,9 @@ router.get("/", (req, res) => {
     console.log("subsiy details:" + JSON.stringify(ssn));
 
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator", "Granting Authority Approver", "Granting Authority Encoder"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
 
     res.render("bulkupload/addsubsidyaward", {
       ssn,

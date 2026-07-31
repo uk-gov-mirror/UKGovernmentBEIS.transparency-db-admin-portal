@@ -16,6 +16,9 @@ router.post("/", (req, res) => {
     res.redirect("/signout");
   } else {
     utils.setSecurityHeaders(res, beis_url_accessmanagement);
+    if (!["BEIS Administrator", "Granting Authority Administrator", "Granting Authority Approver"].includes(ssn.dashboard_roles)) {
+      return res.render("bulkupload/notAuthorized");
+    }
     Award_status = req.body.status;
     awardnumber = req.body.awardnumber;
     res.render("bulkupload/subsidyaward-reject", { Award_status, awardnumber });
