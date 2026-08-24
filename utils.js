@@ -33,11 +33,19 @@ exports.setSecurityHeaders = function (res, url) {
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
     "Content-Security-Policy": [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      // GTM
+      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data:",
+      // GTM / GA tracking pixels
+      "img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com",
       "font-src 'self' data:",
-      "connect-src 'self'",
+      // GTM / GA network calls
+      "connect-src 'self' " +
+        " https://www.googletagmanager.com" +
+        " https://*.google-analytics.com" +
+        " https://*.analytics.google.com",
+      // Required for the GTM <noscript> iframe
+      "frame-src https://www.googletagmanager.com",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
@@ -48,4 +56,4 @@ exports.setSecurityHeaders = function (res, url) {
     "Cross-Origin-Opener-Policy": "same-origin",
     "Cross-Origin-Embedder-Policy": "require-corp",
   });
-}
+};
